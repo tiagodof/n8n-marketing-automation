@@ -2,18 +2,20 @@
 
 This document tracks the development progress of the n8n Marketing Automation Suite.
 
+Updates are pushed as development progresses. There is no fixed day per step — each piece ships when it is ready.
+
 ---
 
 ## Module 01 — AI Marketing Reporting Agent
 
 | Step | Week | What gets built |
 |---|---|---|
-| 1 | 26 Jun 2026 | Project structure, docker-compose, architecture documentation |
-| 2 | 3 Jul 2026 | GA4 Python client — fetches sessions, conversions, top pages and traffic sources |
-| 3 | 10 Jul 2026 | Meta Ads Python client — fetches spend, impressions, clicks and ROAS by campaign |
-| 4 | 17 Jul 2026 | LinkedIn Ads Python client — fetches spend, impressions and CTR by campaign |
-| 5 | 24 Jul 2026 | GPT-4 analysis prompt + PDF report renderer |
-| 6 | 31 Jul 2026 | n8n workflow wiring all sources, email delivery via SMTP — Module 01 complete |
+| 1 | 26 Jun 2026 | Project structure, docker-compose, Makefile for local dev, architecture documentation |
+| 2 | Jul 2026 | GA4 Python client — fetches sessions, conversions, top pages and traffic sources |
+| 3 | Jul 2026 | Meta Ads Python client — fetches spend, impressions, clicks and ROAS by campaign |
+| 4 | Jul 2026 | LinkedIn Ads Python client — fetches spend, impressions and CTR by campaign |
+| 5 | Jul / Aug 2026 | GPT-4 analysis prompt + PDF report renderer |
+| 6 | Aug 2026 | n8n workflow wiring all sources, email delivery via SMTP — Module 01 complete |
 
 ---
 
@@ -21,8 +23,8 @@ This document tracks the development progress of the n8n Marketing Automation Su
 
 | Step | Week | What gets built |
 |---|---|---|
-| 7 | 7 Aug 2026 | Reddit and RSS feed clients, competitor keyword configuration |
-| 8 | 14 Aug 2026 | GPT-4 noise filtering, Slack digest formatter and n8n workflow — Module 02 complete |
+| 7 | Aug 2026 | Reddit and RSS feed clients, competitor keyword configuration |
+| 8 | Aug 2026 | GPT-4 noise filtering, Slack digest formatter and n8n workflow — Module 02 complete |
 
 ---
 
@@ -30,7 +32,7 @@ This document tracks the development progress of the n8n Marketing Automation Su
 
 | Step | Week | What gets built |
 |---|---|---|
-| 9 | 21 Aug 2026 | Campaign brief parser, GPT-4 calendar generator, Notion and Google Sheets output — Module 03 complete |
+| 9 | Aug / Sep 2026 | Campaign brief parser, GPT-4 calendar generator, Notion and Google Sheets output — Module 03 complete |
 
 ---
 
@@ -38,7 +40,7 @@ This document tracks the development progress of the n8n Marketing Automation Su
 
 | Step | Week | What gets built |
 |---|---|---|
-| 10 | 28 Aug 2026 | HubSpot/Pipedrive webhook listener, company data enrichment, GPT-4 priority scoring — Module 04 complete |
+| 10 | Sep 2026 | HubSpot/Pipedrive webhook listener, company data enrichment, GPT-4 priority scoring — Module 04 complete |
 
 ---
 
@@ -46,4 +48,4 @@ This document tracks the development progress of the n8n Marketing Automation Su
 
 | Step | Week | What gets built |
 |---|---|---|
-| 11 | 4 Sep 2026 | Full setup guide, CHANGELOG, v1.0 tag |
+| 11 | Sep 2026 | Full setup guide, CHANGELOG, v1.0 tag |
