@@ -11,7 +11,7 @@ Updates are pushed as development progresses. There is no fixed day per step —
 | Step | Week | What gets built |
 |---|---|---|
 | 1 | 26 Jun 2026 | Project structure, docker-compose, Makefile for local dev, architecture documentation |
-| 2 | Jul 2026 | GA4 Python client — fetches sessions, conversions, top pages and traffic sources |
+| 2 | 26 Jun 2026 | GA4 Python client — fetches sessions, conversions, top pages and traffic sources |
 | 3 | Jul 2026 | Meta Ads Python client — fetches spend, impressions, clicks and ROAS by campaign |
 | 4 | Jul 2026 | LinkedIn Ads Python client — fetches spend, impressions and CTR by campaign |
 | 5 | Jul / Aug 2026 | GPT-4 analysis prompt + PDF report renderer |
