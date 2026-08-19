@@ -65,17 +65,17 @@ def fetch_weekly_summary(
             "traffic_sources": [{"source": str, "medium": str, "sessions": int}, ...]
         }
     """
-    if not GA4_AVAILABLE:
-        raise ImportError(
-            "google-analytics-data is not installed.\n"
-            "Run: pip install google-analytics-data"
-        )
-
     pid = property_id or os.environ.get("GA4_PROPERTY_ID")
     if not pid:
         raise EnvironmentError(
             "GA4_PROPERTY_ID is not set. "
             "See .env.example for setup instructions."
+        )
+
+    if not GA4_AVAILABLE:
+        raise ImportError(
+            "google-analytics-data is not installed.\n"
+            "Run: pip install google-analytics-data"
         )
 
     client = _get_client()
