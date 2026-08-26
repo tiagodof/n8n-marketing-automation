@@ -64,7 +64,7 @@ class TestLinkedInAnalyticsResponse(unittest.TestCase):
     API_RESPONSE = {
         "elements": [
             {
-                "pivotValue": "urn:li:sponsoredCampaign:987",
+                "pivotValues": ["urn:li:sponsoredCampaign:987"],
                 "impressions": 18000,
                 "clicks": 252,
                 "costInLocalCurrency": 430.00,
@@ -72,7 +72,7 @@ class TestLinkedInAnalyticsResponse(unittest.TestCase):
                 "externalWebsiteConversions": 19,
             },
             {
-                "pivotValue": "urn:li:sponsoredCampaign:654",
+                "pivotValues": ["urn:li:sponsoredCampaign:654"],
                 "impressions": 11000,
                 "clicks": 143,
                 "costInLocalCurrency": 250.00,
@@ -130,6 +130,7 @@ class TestLinkedInAnalyticsResponse(unittest.TestCase):
         self.assertEqual(call_args.args[0], "https://api.linkedin.com/rest/adAnalytics")
         self.assertEqual(call_args.kwargs["headers"]["Authorization"], "Bearer test-token")
         self.assertIn("LinkedIn-Version", call_args.kwargs["headers"])
+        self.assertEqual(call_args.kwargs["headers"]["LinkedIn-Version"], "202608")
         self.assertEqual(call_args.kwargs["params"]["pivot"], "CAMPAIGN")
         self.assertEqual(call_args.kwargs["params"]["timeGranularity"], "ALL")
         self.assertIn("costInLocalCurrency", call_args.kwargs["params"]["fields"])
@@ -161,6 +162,16 @@ class TestLinkedInHelpers(unittest.TestCase):
     def test_campaign_id_is_extracted_from_urn(self):
         client = self._client()
         self.assertEqual(client._campaign_id("urn:li:sponsoredCampaign:987"), "987")
+
+    def test_campaign_urn_reads_current_pivot_values_shape(self):
+        client = self._client()
+        element = {"pivotValues": ["urn:li:sponsoredCampaign:987"]}
+        self.assertEqual(client._campaign_urn(element), "urn:li:sponsoredCampaign:987")
+
+    def test_campaign_urn_supports_legacy_single_value_shape(self):
+        client = self._client()
+        element = {"pivotValue": "urn:li:sponsoredCampaign:987"}
+        self.assertEqual(client._campaign_urn(element), "urn:li:sponsoredCampaign:987")
 
     def test_date_range_format(self):
         from datetime import date

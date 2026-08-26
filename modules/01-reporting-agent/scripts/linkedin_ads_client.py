@@ -11,7 +11,7 @@ Required environment variables:
     LINKEDIN_AD_ACCOUNT_ID  Numeric LinkedIn advertising account ID.
 
 Optional environment variables:
-    LINKEDIN_API_VERSION    Version header for the REST API. Defaults to 202607.
+    LINKEDIN_API_VERSION    Version header for the REST API. Defaults to 202608.
     LINKEDIN_CAMPAIGN_NAMES JSON object mapping campaign IDs to human-readable names.
 
 Official API reference:
@@ -22,13 +22,13 @@ import argparse
 import json
 import os
 from datetime import date, timedelta
-from typing import Any, Optional
+from typing import Any, Mapping, Optional
 
 import requests
 
 
 LINKEDIN_ANALYTICS_URL = "https://api.linkedin.com/rest/adAnalytics"
-DEFAULT_API_VERSION = "202607"
+DEFAULT_API_VERSION = "202608"
 
 
 def _get_credentials() -> tuple[str, str]:
@@ -85,6 +85,18 @@ def _date_range_value(start_date: date, end_date: date) -> str:
 def _campaign_id(value: str) -> str:
     """Extract the numeric campaign ID from a sponsored campaign URN."""
     return str(value).rsplit(":", maxsplit=1)[-1]
+
+
+def _campaign_urn(element: Mapping[str, Any]) -> str:
+    """Read the campaign URN from the versioned API response.
+
+    The current REST response returns pivotValues as a list. The single-value
+    fallback preserves compatibility with older fixtures and stored responses.
+    """
+    pivot_values = element.get("pivotValues", [])
+    if isinstance(pivot_values, list) and pivot_values:
+        return str(pivot_values[0])
+    return str(element.get("pivotValue", ""))
 
 
 def _as_float(value: Any) -> float:
@@ -163,7 +175,7 @@ def fetch_weekly_summary(
     total_conversions = 0.0
 
     for element in elements:
-        campaign_urn = str(element.get("pivotValue", ""))
+        campaign_urn = _campaign_urn(element)
         campaign_id = _campaign_id(campaign_urn)
         impressions = _as_int(element.get("impressions"))
         clicks = _as_int(element.get("clicks"))
