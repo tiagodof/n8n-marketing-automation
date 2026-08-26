@@ -1,0 +1,90 @@
+{
+  "ga4": {
+    "period": {
+      "start": "2026-08-19",
+      "end": "2026-08-25"
+    },
+    "overview": {
+      "sessions": 4821,
+      "users": 3102,
+      "new_users": 1890,
+      "conversions": 47,
+      "bounce_rate": 42.3
+    },
+    "top_pages": [
+      {"page": "/", "sessions": 1200},
+      {"page": "/pricing", "sessions": 780},
+      {"page": "/blog/ai-automation", "sessions": 540}
+    ],
+    "traffic_sources": [
+      {"source": "google", "medium": "organic", "sessions": 2100},
+      {"source": "linkedin", "medium": "social", "sessions": 890}
+    ]
+  },
+  "meta_ads": {
+    "period": {
+      "start": "2026-08-19",
+      "end": "2026-08-25"
+    },
+    "totals": {
+      "spend": 1240.5,
+      "impressions": 85000,
+      "clicks": 1020,
+      "ctr": 1.2
+    },
+    "campaigns": [
+      {
+        "name": "Brand Awareness Q3",
+        "spend": 720.0,
+        "impressions": 50000,
+        "clicks": 600,
+        "ctr": 1.2,
+        "roas": 3.4
+      },
+      {
+        "name": "Retargeting Blog Visitors",
+        "spend": 520.5,
+        "impressions": 35000,
+        "clicks": 420,
+        "ctr": 1.2,
+        "roas": 4.1
+      }
+    ]
+  },
+  "linkedin_ads": {
+    "period": {
+      "start": "2026-08-19",
+      "end": "2026-08-25"
+    },
+    "totals": {
+      "spend": 680.0,
+      "impressions": 22000,
+      "clicks": 310,
+      "ctr": 1.4091,
+      "landing_page_clicks": 240,
+      "conversions": 18
+    },
+    "campaigns": [
+      {
+        "id": "123",
+        "name": "Lead Generation Q3",
+        "spend": 430.0,
+        "impressions": 14000,
+        "clicks": 200,
+        "ctr": 1.4286,
+        "landing_page_clicks": 155,
+        "conversions": 12
+      },
+      {
+        "id": "456",
+        "name": "Content Promotion",
+        "spend": 250.0,
+        "impressions": 8000,
+        "clicks": 110,
+        "ctr": 1.375,
+        "landing_page_clicks": 85,
+        "conversions": 6
+      }
+    ]
+  }
+}

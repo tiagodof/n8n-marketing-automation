@@ -1,0 +1,6 @@
+# Data connectors
+requests>=2.31,<3.0
+google-analytics-data>=0.18,<1.0
+
+# PDF report rendering
+fpdf2>=2.8,<3.0

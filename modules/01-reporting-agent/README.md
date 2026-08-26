@@ -1,60 +1,85 @@
-# Module 01 — AI Marketing Reporting Agent
+# Module 01: AI Marketing Reporting Agent
 
 ## What it does
 
-Every Monday morning this module:
+This module prepares a weekly executive marketing report from three data sources: **Google Analytics 4**, **Meta Ads**, and **LinkedIn Ads**. The three connector scripts output a normalised JSON structure. `report_builder.py` then sends a compact version of that data to OpenAI, receives a structured executive analysis, and renders the analysis and core metrics into a PDF.
 
-1. Pulls the last 7 days of data from **Google Analytics 4**, **Meta Ads** and **LinkedIn Ads**
-2. Sends the raw metrics to **GPT-4**, which writes a concise executive summary with trend analysis and actionable recommendations
-3. Renders the summary into a clean **PDF report**
-4. Delivers the report by **email** to the configured recipient(s)
+The final n8n workflow, scheduled for the next step, will orchestrate the sources and email the report every Monday.
 
-## Architecture
+## Current architecture
 
-```
-[n8n Cron — Monday 07:00]
-        |
-        ├── [GA4 Script]        → sessions, conversions, top pages, traffic sources
-        ├── [Meta Ads Script]   → spend, impressions, clicks, CTR, ROAS by campaign
-        └── [LinkedIn Ads Script] → impressions, clicks, CTR, spend by campaign
-        |
-        ↓
-[Merge & normalise data]
-        |
-        ↓
-[GPT-4 — generate executive summary]
-        |
-        ↓
-[PDF renderer]
-        |
-        ↓
-[Send email via SMTP]
+```text
+GA4 client -----------\
+Meta Ads client ------- > normalised weekly metrics JSON -> OpenAI analysis -> PDF report
+LinkedIn Ads client ---/                                              |
+                                                                       v
+                                                         n8n email delivery (next step)
 ```
 
-## Files
+## Implemented files
 
-| File | Purpose |
+| File | Responsibility |
 |---|---|
-| `workflows/reporting_agent.json` | n8n workflow export — import directly into your n8n instance |
-| `scripts/ga4_client.py` | Fetches GA4 data via the Google Analytics Data API |
-| `scripts/meta_ads_client.py` | Fetches Meta Ads data via the Marketing API |
-| `scripts/linkedin_ads_client.py` | Fetches LinkedIn Ads data via the Marketing API |
-| `scripts/report_builder.py` | Merges data, calls GPT-4, renders PDF |
-| `templates/report_email.html` | HTML email template |
-| `tests/test_ga4_client.py` | Unit tests for GA4 client |
+| `scripts/ga4_client.py` | Retrieves website sessions, users, conversions, top pages, and traffic sources from the GA4 Data API. |
+| `scripts/meta_ads_client.py` | Retrieves spend, impressions, clicks, CTR, ROAS, and campaign-level results from the Meta Marketing API. |
+| `scripts/linkedin_ads_client.py` | Retrieves campaign-level LinkedIn Ads performance from the LinkedIn Reporting API. |
+| `scripts/report_builder.py` | Validates the merged metrics, asks OpenAI for an executive analysis, and renders a PDF report. |
+| `examples/weekly_metrics.example.json` | Example normalised input for local validation without live platform credentials. |
+| `requirements.txt` | Python dependencies for the connector and PDF components. |
+| `tests/` | Unit tests for data validation, API request construction, AI response handling, and PDF output. |
 
-## Setup
+## Local setup
 
-1. Copy `.env.example` to `.env` and fill in your credentials
-2. Start n8n: `cd docker && docker-compose up -d`
-3. Open n8n at `http://localhost:5678`
-4. Import `workflows/reporting_agent.json`
-5. Activate the workflow
+Install the module dependencies from the repository root:
+
+```bash
+pip install -r modules/01-reporting-agent/requirements.txt
+```
+
+Copy `.env.example` to `.env` and set the credentials required for the data sources you intend to run. `OPENAI_API_KEY` is required when generating a live analysis and PDF.
+
+## Test the data contract without credentials
+
+The example JSON allows you to inspect exactly what is sent for analysis without calling OpenAI:
+
+```bash
+python3 modules/01-reporting-agent/scripts/report_builder.py \
+  --input modules/01-reporting-agent/examples/weekly_metrics.example.json \
+  --output /tmp/weekly-marketing-report.pdf \
+  --print-prompt
+```
+
+Run all module tests with:
+
+```bash
+python3 -m unittest discover \
+  -s modules/01-reporting-agent/tests \
+  -p 'test_*.py' \
+  -v
+```
+
+## Generate a live report
+
+Once the metrics JSON contains real output from the three connectors and `OPENAI_API_KEY` is configured, run:
+
+```bash
+python3 modules/01-reporting-agent/scripts/report_builder.py \
+  --input path/to/weekly_metrics.json \
+  --output reports/weekly-marketing-report.pdf
+```
+
+The generated PDF contains an AI executive summary, key wins, watchouts, recommended actions, core website metrics, and the top paid-campaign metrics.
 
 ## Required credentials
 
-- Google Cloud service account with **Google Analytics Data API** enabled
-- Meta App with **ads_read** permission and a long-lived access token
-- LinkedIn App with **r_ads_reporting** scope
-- OpenAI API key
-- SMTP credentials for email delivery
+| Service | Required configuration |
+|---|---|
+| Google Analytics 4 | Service account JSON and a GA4 property ID. |
+| Meta Ads | Long-lived token with `ads_read` and an ad account ID. |
+| LinkedIn Ads | OAuth token with `r_ads_reporting` and a numeric ad account ID. |
+| OpenAI | API key, plus optional model and compatible API base URL overrides. |
+| SMTP | Required only in the next step, when n8n sends the finished report by email. |
+
+## Current limitations
+
+The PDF renderer is complete, but the n8n orchestration and email delivery are intentionally not included yet. They will be added in the final Module 01 workflow step.
