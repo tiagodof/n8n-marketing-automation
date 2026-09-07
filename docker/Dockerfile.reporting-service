@@ -1,0 +1,23 @@
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1
+
+WORKDIR /app
+
+COPY modules/01-reporting-agent/requirements.txt /tmp/module-requirements.txt
+COPY modules/01-reporting-agent/service/requirements.txt /tmp/service-requirements.txt
+RUN pip install --no-cache-dir -r /tmp/module-requirements.txt -r /tmp/service-requirements.txt
+
+COPY modules/01-reporting-agent /app/modules/01-reporting-agent
+
+RUN useradd --create-home --uid 10001 reporting \
+    && mkdir -p /reports \
+    && chown -R reporting:reporting /app /reports
+
+USER reporting
+
+EXPOSE 8080
+
+CMD ["uvicorn", "app:app", "--app-dir", "/app/modules/01-reporting-agent/service", "--host", "0.0.0.0", "--port", "8080"]

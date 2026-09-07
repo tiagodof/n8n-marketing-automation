@@ -1,0 +1,121 @@
+{
+  "name": "AI Marketing Reporting Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "weeksInterval": 1,
+              "triggerAtDay": [1],
+              "triggerAtHour": 7,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      },
+      "id": "df99ee31-3a3a-42b6-8e0b-29f24ad546f9",
+      "name": "Weekly schedule",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [180, 300]
+    },
+    {
+      "parameters": {},
+      "id": "9ae25a8c-c4b7-452f-b792-2389f49a24a3",
+      "name": "Run manually",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [180, 450]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.REPORTING_SERVICE_URL }}/v1/reports/weekly",
+        "authentication": "none",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.REPORTING_SERVICE_TOKEN }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"days\": 7\n}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "c44c1e73-6f9f-462d-a32e-13b4979f6629",
+      "name": "Generate weekly report",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [460, 375]
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "fileSelector": "={{ $json.report_path }}",
+        "options": {
+          "fileName": "={{ $json.report_filename }}",
+          "mimeType": "application/pdf",
+          "dataPropertyName": "report_pdf"
+        }
+      },
+      "id": "5f864984-78aa-4c84-8dc7-f26b26831ec5",
+      "name": "Load report PDF",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1.1,
+      "position": [730, 375]
+    },
+    {
+      "parameters": {
+        "fromEmail": "={{ $env.SMTP_USER }}",
+        "toEmail": "={{ $env.REPORT_RECIPIENT_EMAIL }}",
+        "subject": "=Weekly marketing report: {{ $('Generate weekly report').first().json.report_period_start }} to {{ $('Generate weekly report').first().json.report_period_end }}",
+        "emailFormat": "both",
+        "text": "=Your weekly marketing report is ready. The PDF attachment includes an executive analysis, key wins, watchouts, and recommended actions for the reporting period.",
+        "html": "={{ $('Generate weekly report').first().json.email_html }}",
+        "options": {
+          "appendAttribution": false,
+          "fileAttachments": "report_pdf"
+        }
+      },
+      "id": "6fa5f865-2e0f-4a89-8e1c-bbcd0fec7599",
+      "name": "Email report",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [990, 375]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Weekly schedule": {
+      "main": [[{"node": "Generate weekly report", "type": "main", "index": 0}]]
+    },
+    "Run manually": {
+      "main": [[{"node": "Generate weekly report", "type": "main", "index": 0}]]
+    },
+    "Generate weekly report": {
+      "main": [[{"node": "Load report PDF", "type": "main", "index": 0}]]
+    },
+    "Load report PDF": {
+      "main": [[{"node": "Email report", "type": "main", "index": 0}]]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "Europe/Lisbon"
+  },
+  "versionId": "4fea92f0-5785-4d3e-b31f-9bcf1c90bd94",
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "tags": []
+}
