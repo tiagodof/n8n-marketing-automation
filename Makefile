@@ -1,4 +1,4 @@
-.PHONY: build start stop restart logs shell status test
+.PHONY: build start stop restart logs shell status test test-module-01 test-module-02
 
 ## Build the n8n and reporting-service stack
 build:
@@ -33,6 +33,12 @@ shell:
 status:
 	cd docker && docker-compose ps
 
-## Run automated tests for Module 01
-test:
+## Run the full automated suite
+# Individual module targets remain available for focused local development.
+test: test-module-01 test-module-02
+
+test-module-01:
 	python3 -m unittest discover -s modules/01-reporting-agent/tests -p 'test_*.py' -v
+
+test-module-02:
+	python3 -m unittest discover -s modules/02-competitor-monitor/tests -p 'test_*.py' -v

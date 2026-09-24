@@ -2,6 +2,7 @@
 
 ![Status](https://img.shields.io/badge/status-building-brightgreen)
 ![Module 01](https://img.shields.io/badge/module--01-complete-2563eb)
+![Module 02](https://img.shields.io/badge/module--02-in%20progress-f59e0b)
 ![n8n](https://img.shields.io/badge/n8n-automation-red)
 ![OpenAI](https://img.shields.io/badge/OpenAI-AI%20analysis-412991)
 ![License](https://img.shields.io/badge/license-MIT-green)
@@ -19,7 +20,7 @@ The positive feedback I received on [FirstStep](https://firststep-nine.vercel.ap
 | # | Module | Description | Status |
 |---|---|---|---|
 | 01 | **AI Marketing Reporting Agent** | Collects GA4, Meta Ads, and LinkedIn Ads data, generates an AI executive analysis and PDF report, and sends it by email. | **Complete** |
-| 02 | Competitor Intelligence Monitor | Monitors competitor mentions across Reddit, Google News, and RSS feeds. AI filters noise and prepares a daily Slack digest. | Planned |
+| 02 | **Competitor Intelligence Monitor** | Collects public competitor signals from Reddit, Google News, and RSS feeds. AI filtering and a daily Slack digest are the next increment. | **In progress** |
 | 03 | Social Media Content Calendar Generator | Converts a campaign brief into a 30-day content calendar for LinkedIn, Instagram, and X. | Planned |
 | 04 | CRM Enrichment Pipeline | Enriches new HubSpot or Pipedrive contacts with company data and an AI priority score. | Planned |
 
@@ -38,6 +39,22 @@ n8n trigger -> private reporting service -> GA4 / Meta / LinkedIn / OpenAI
 
 The reporting service has no public port. See the [Module 01 guide](modules/01-reporting-agent/README.md) for installation, security controls, credential setup, and test commands.
 
+## Module 02: Competitor Intelligence Monitor
+
+The first Module 02 increment is implemented. It reads a competitor configuration, collects public RSS and Atom feeds, creates Google News search feeds, ingests public Reddit listing feeds, strips tracking parameters, detects competitor references, and writes a normalised intelligence payload. Source failures are retained as observable errors without stopping the complete run.
+
+```text
+competitor configuration -> RSS / Reddit / Google News feeds
+                                 |
+                                 v
+                         normalised intelligence JSON
+                                 |
+                                 v
+                 AI curation and Slack digest, next increment
+```
+
+The collector needs no credentials. It is intentionally source-neutral so the upcoming AI and Slack layers can be tested independently. See the [Module 02 guide](modules/02-competitor-monitor/README.md) for configuration, local execution, data contract, and tests.
+
 ## Project structure
 
 ```text
@@ -51,6 +68,9 @@ n8n-marketing-automation/
 │   │   ├── tests/          # Unit and workflow tests
 │   │   └── workflows/      # Importable n8n workflow JSON
 │   ├── 02-competitor-monitor/
+│   │   ├── examples/       # Competitor and public source configuration
+│   │   ├── scripts/        # Public feed collector and normalisation
+│   │   └── tests/          # Feed parsing and collection tests
 │   ├── 03-content-calendar/
 │   └── 04-crm-enrichment/
 ├── docker/                 # Docker Compose and service image
@@ -62,13 +82,14 @@ n8n-marketing-automation/
 
 | Technology | Purpose |
 |---|---|
-| n8n, self-hosted with Docker | Workflow orchestration, schedules, and email delivery |
+| n8n, self-hosted with Docker | Workflow orchestration, schedules, and delivery |
 | FastAPI | Private reporting service that n8n calls inside the Docker network |
-| Python | Marketing API clients, data normalisation, AI analysis, and PDF generation |
-| OpenAI API | Evidence-based executive analysis and recommended actions |
+| Python | Marketing API clients, public feed collection, data normalisation, AI analysis, and PDF generation |
+| OpenAI API | Evidence-based executive analysis and upcoming intelligence curation |
 | Google Analytics 4 Data API | Website sessions, conversions, top pages, and traffic sources |
 | Meta Marketing API | Campaign spend, impressions, clicks, CTR, and ROAS |
 | LinkedIn Marketing API | Campaign-level paid-media performance |
+| Google News RSS, Reddit RSS, and publisher RSS | Public competitor intelligence sources |
 | SMTP | Delivery of the weekly PDF report |
 
 ## Getting started
@@ -88,9 +109,17 @@ The Module 01 test suite can be run with:
 make test
 ```
 
+The Module 02 collector runs without secrets:
+
+```bash
+python3 modules/02-competitor-monitor/scripts/feed_collector.py \
+  --config modules/02-competitor-monitor/examples/competitors.example.json \
+  --output /tmp/competitor-intelligence.json
+```
+
 ## Roadmap
 
-The technical project roadmap is available in [docs/build-roadmap.md](docs/build-roadmap.md). Module 02, the Competitor Intelligence Monitor, is the next development stage.
+The technical project roadmap is available in [docs/build-roadmap.md](docs/build-roadmap.md). Module 02 collection is in progress. The next increment adds AI relevance filtering, a Slack digest formatter, and the n8n workflow.
 
 ## Follow the build
 

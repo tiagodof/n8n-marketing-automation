@@ -15,25 +15,25 @@ This document tracks the development progress of the n8n Marketing Automation Su
 
 ## Module 02: Competitor Intelligence Monitor
 
-| Step | Window | What gets built |
+| Step | Date / window | What gets built |
 |---|---|---|
-| 7 | Aug / Sep 2026 | Reddit and RSS feed clients plus competitor keyword configuration. |
-| 8 | Sep 2026 | AI noise filtering, Slack digest formatter, and n8n workflow. Module 02 complete. |
+| 7 | **24 Sep 2026** | Configurable competitor keywords, public RSS and Atom ingestion, Reddit and Google News feed builders, source error isolation, URL deduplication, normalised intelligence JSON, and automated tests. |
+| 8 | Next | AI noise filtering, Slack digest formatter, and n8n workflow. Module 02 complete. |
 
 ## Module 03: Social Media Content Calendar Generator
 
 | Step | Window | What gets built |
 |---|---|---|
-| 9 | Sep 2026 | Campaign brief parser, AI calendar generator, and Notion and Google Sheets output. Module 03 complete. |
+| 9 | After Module 02 | Campaign brief parser, AI calendar generator, and Notion and Google Sheets output. Module 03 complete. |
 
 ## Module 04: CRM Enrichment Pipeline
 
 | Step | Window | What gets built |
 |---|---|---|
-| 10 | Sep / Oct 2026 | HubSpot/Pipedrive webhook listener, company data enrichment, and AI priority scoring. Module 04 complete. |
+| 10 | After Module 03 | HubSpot/Pipedrive webhook listener, company data enrichment, and AI priority scoring. Module 04 complete. |
 
 ## v1.0 Release
 
 | Step | Window | What gets built |
 |---|---|---|
-| 11 | Oct 2026 | Full setup guide, CHANGELOG, and v1.0 release tag. |
+| 11 | Final project stage | Full setup guide, CHANGELOG, and v1.0 release tag. |

@@ -1,0 +1,25 @@
+{
+  "item_limit": 20,
+  "competitors": [
+    {
+      "name": "Example Competitor",
+      "keywords": ["Example Competitor", "examplecompetitor"]
+    }
+  ],
+  "google_news": {
+    "enabled": true,
+    "language": "en-US",
+    "country": "US"
+  },
+  "reddit": {
+    "enabled": true,
+    "sort": "new",
+    "subreddits": ["marketing", "SaaS"]
+  },
+  "rss_feeds": [
+    {
+      "name": "Example industry publication",
+      "url": "https://example.com/feed.xml"
+    }
+  ]
+}
